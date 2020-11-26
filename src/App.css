@@ -46,3 +46,20 @@ td {
 .heading {
   padding: 50px;
 }
+
+.popup {
+  margin: 200px;
+  border: 1px solid black;
+  border-radius: 5px;
+  height: 200px;
+  padding: 50px;
+}
+
+.message {
+  float: left;
+}
+
+.close {
+  float: right;
+  cursor: pointer;
+}

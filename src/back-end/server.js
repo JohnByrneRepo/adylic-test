@@ -48,11 +48,11 @@ const getResponse = responseBody => {
   const notAuthorisedRange = { min: 0.75, max: 0.85 };
   const status = Math.random();
   
-  if (isInRange(failFactorRange, status)) {
+  // if (isInRange(failFactorRange, status)) {
     throw new Error(serverStatus.INTERNAL_SERVER_ERROR);
-  } else if (isInRange(notAuthorisedRange, status)) {
-    throw new Error(serverStatus.UNAUTHORIZED);
-  }
+  // } else if (isInRange(notAuthorisedRange, status)) {
+    // throw new Error(serverStatus.UNAUTHORIZED);
+  // }
 
   return { body: keysToCamel(responseBody) };
 };

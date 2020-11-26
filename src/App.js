@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Fragment } from 'react';
+import React, { useState, useEffect } from 'react';
 import { mockFetch } from './back-end/server';
 import './App.css';
 import Popup from 'reactjs-popup';
@@ -56,7 +56,7 @@ function App() {
   };
 
   const getItem = (key, frame) => {
-    return key === '$BackgroundImage' ? <img src={frame[key].url} /> : <div>{sanitizeItem(frame[key])}</div>
+    return key === '$BackgroundImage' ? <img alt="image" src={frame[key].url} /> : <div>{sanitizeItem(frame[key])}</div>
   };
 
   const showFrame = (frame) => {
@@ -65,7 +65,7 @@ function App() {
     )
   };
 
-  if (!frame || !columns) return (<div />);
+  // if (!frame || !columns) return (<div />);
 
   const getClass = (index, length) => {
     switch (index) {
@@ -88,28 +88,30 @@ function App() {
 
 
   return (
-    <div>
-      {error && <Popup>You are not authorised</Popup>}
-      {columns &&
-        <div className="heading">
-          <div className="buttons">
-            {frames.map((frame, index) =>
-              <div key={index} className={getClass(index, frames.length)} onClick={() => setFrame(index)} />
-            )}
-          </div>
-          <div className="copy" onClick={copyFrames}>Copy frames</div>
-        </div>}
-      <table cellSpacing="0" cellPadding="0">
-        <thead>
-          <tr>{getHeader(columns)}</tr>
-        </thead>
-        <tbody>
-          {view === 'one' ? <tr>{showFrame(frame)}</tr>
-            : frames.map((frame, index) => <tr key={index}>{showFrame(frame.content)}</tr>)
-          }
-        </tbody>
-      </table>
-    </div>
+    <ErrorBoundary>
+      <div>
+        {error ? <Popup>You are not authorised</Popup> :
+        
+          <div className="heading">
+            <div className="buttons">
+              {frames.map((frame, index) =>
+                <div key={index} className={getClass(index, frames.length)} onClick={() => setFrame(index)} />
+              )}
+            </div>
+            <div className="copy" onClick={copyFrames}>Copy frames</div>
+          </div>}
+        <table cellSpacing="0" cellPadding="0">
+          <thead>
+            <tr>{getHeader(columns)}</tr>
+          </thead>
+          <tbody>
+            {view === 'one' ? <tr>{showFrame(frame)}</tr>
+              : frames.map((frame, index) => <tr key={index}>{showFrame(frame.content)}</tr>)
+            }
+          </tbody>
+        </table>
+      </div>
+    </ErrorBoundary>
   );
 }
 
