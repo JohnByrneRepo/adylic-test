@@ -1,10 +1,46 @@
 import serverStatus from "./serverStatus";
 import { variant, columns } from "./db";
 
-const MAX_DELAY = 3000;
+const MAX_DELAY = 0;
+// const MAX_DELAY = 3000;
 
 const isInRange = (range, value) => {
   return value >= range.min && value < range.max;
+};
+
+const isObject = function (o) {
+  return o === Object(o) && !isArray(o) && typeof o !== 'function';
+};
+
+const isArray = function (a) {
+  return Array.isArray(a);
+};
+
+const snakeToCamel = (s) => {
+  return s.replace(/([-_][a-z])/ig, ($1) => {
+    return $1.toUpperCase()
+      .replace('-', '')
+      .replace('_', '');
+  });
+};
+
+const keysToCamel = function (o) {
+  if (isObject(o)) {
+    const n = {};
+
+    Object.keys(o)
+      .forEach((k) => {
+        n[snakeToCamel(k)] = keysToCamel(o[k]);
+      });
+
+    return n;
+  } else if (isArray(o)) {
+    return o.map((i) => {
+      return keysToCamel(i);
+    });
+  }
+
+  return o;
 };
 
 const getResponse = responseBody => {
@@ -17,9 +53,9 @@ const getResponse = responseBody => {
   } else if (isInRange(notAuthorisedRange, status)) {
     throw new Error(serverStatus.UNAUTHORIZED);
   }
-  return { body: responseBody };
-};
 
+  return { body: keysToCamel(responseBody) };
+};
 
 /**
  * @typedef {Object} ServerResponse
